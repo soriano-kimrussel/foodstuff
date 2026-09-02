@@ -97,6 +97,8 @@ const de: Messages = {
     endsOn: 'Zugang endet am {date}',
   },
   errors: {
+    upstreamSlow: 'Open Food Facts antwortet gerade nicht. Bitte versuche es gleich noch einmal.',
+    upstreamUnavailable: 'Open Food Facts ist nicht erreichbar. Bitte versuche es gleich noch einmal.',
     generic: 'Etwas ist schiefgelaufen.',
     backendUnreachable: 'Die API antwortet nicht. Läuft das Backend auf Port 4000?',
     retry: 'Erneut versuchen',

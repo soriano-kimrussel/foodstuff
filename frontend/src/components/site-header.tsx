@@ -3,6 +3,7 @@ import { createTranslator } from '@/i18n';
 import type { Locale } from '@/i18n/config';
 import type { SubscriptionView } from '@/lib/types';
 import { LanguageSelector } from './language-selector';
+import { BillingPortalButton } from './billing-portal-button';
 
 /**
  * Server Component: the subscription badge is rendered from data the server
@@ -38,6 +39,13 @@ export function SiteHeader({
                 : undefined
             }
           />
+          {isActive ? (
+            <BillingPortalButton
+              locale={locale}
+              label={m.nav.manageBilling}
+              errorLabel={m.errors.generic}
+            />
+          ) : null}
           <LanguageSelector locale={locale} />
         </div>
       </div>

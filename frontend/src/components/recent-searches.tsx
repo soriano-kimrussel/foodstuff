@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { createTranslator } from '@/i18n';
 import type { Locale } from '@/i18n/config';
 import type { RecentSearch } from '@/lib/types';
+import { ClearHistoryButton } from './clear-history-button';
 
 /**
  * The MySQL-backed search history. Each entry links back to the search that
@@ -19,9 +20,14 @@ export function RecentSearches({
 
   return (
     <section aria-labelledby="recent-heading" className="rounded-lg border border-line bg-raised p-4">
-      <h2 id="recent-heading" className="text-xs font-semibold uppercase tracking-wide text-muted">
-        {m.recent.heading}
-      </h2>
+      <div className="flex items-baseline justify-between gap-3">
+        <h2 id="recent-heading" className="text-xs font-semibold uppercase tracking-wide text-muted">
+          {m.recent.heading}
+        </h2>
+        {searches.length > 0 ? (
+          <ClearHistoryButton label={m.recent.clear} clearedLabel={m.recent.cleared} />
+        ) : null}
+      </div>
 
       {searches.length === 0 ? (
         <p className="mt-3 text-sm text-muted">{m.recent.empty}</p>

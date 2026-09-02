@@ -38,12 +38,17 @@ export default async function SearchPage({
     try {
       results = await searchProducts(term, locale);
     } catch (error) {
-      searchError =
-        error instanceof ApiError && error.isUnreachable
+      // Same reasoning as the product page: translate by code, never render
+      // the backend's own English message into a localized page.
+      searchError = !(error instanceof ApiError)
+        ? m.search.error
+        : error.isUnreachable
           ? m.errors.backendUnreachable
-          : error instanceof ApiError
-            ? error.message
-            : m.search.error;
+          : error.code === 'service_unavailable'
+            ? m.errors.upstreamSlow
+            : error.code === 'upstream_error'
+              ? m.errors.upstreamUnavailable
+              : m.search.error;
     }
   }
 

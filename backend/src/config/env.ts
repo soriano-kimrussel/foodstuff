@@ -42,7 +42,7 @@ const schema = z.object({
   OFF_USER_AGENT: z
     .string()
     .default('FoodFactsExplorer/1.0 (technical-test; demo@example.com)'),
-  OFF_TIMEOUT_MS: z.coerce.number().int().positive().default(8000),
+  OFF_TIMEOUT_MS: z.coerce.number().int().positive().default(15000),
   OFF_CACHE_TTL_SECONDS: z.coerce.number().int().nonnegative().default(300),
 });
 

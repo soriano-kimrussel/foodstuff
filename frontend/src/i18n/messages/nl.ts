@@ -97,6 +97,8 @@ const nl: Messages = {
     endsOn: 'Toegang eindigt op {date}',
   },
   errors: {
+    upstreamSlow: 'Open Food Facts reageert momenteel niet. Probeer het zo meteen opnieuw.',
+    upstreamUnavailable: 'Open Food Facts is niet bereikbaar. Probeer het zo meteen opnieuw.',
     generic: 'Er is iets misgegaan.',
     backendUnreachable: 'De API reageert niet. Draait de backend op poort 4000?',
     retry: 'Opnieuw proberen',

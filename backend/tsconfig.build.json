@@ -1,0 +1,16 @@
+{
+  // Production build only.
+  //
+  // The base tsconfig deliberately includes tests/ and prisma/ so the editor
+  // and `npm run typecheck` see the whole project. Compiling with that config
+  // would put the entrypoint at dist/src/server.js and ship the test suite, so
+  // the build narrows rootDir to src/ and emits dist/server.js.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "noEmit": false
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "tests", "prisma"]
+}

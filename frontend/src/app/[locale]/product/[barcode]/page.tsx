@@ -38,16 +38,32 @@ export default async function ProductPage({ params }: PageProps) {
   try {
     data = await getProduct(barcode, locale);
   } catch (error) {
-    if (error instanceof ApiError && error.isNotFound) {
-      return (
-        <div className="mx-auto max-w-md py-12 text-center">
-          <h1 className="text-lg font-semibold">{m.product.notFound}</h1>
-          <p className="mt-2 text-sm text-muted">{m.product.notFoundHint}</p>
-          <BackLink locale={locale} label={m.product.backToSearch} className="mt-6 inline-block" />
-        </div>
-      );
-    }
-    throw error;
+    if (!(error instanceof ApiError)) throw error;
+
+    // Everything the API can plausibly return gets a readable page. Rethrowing
+    // anything but a genuine bug would hand the user Next's blank "Application
+    // error" screen, which is what an Open Food Facts timeout used to do.
+    // Map the API's error CODE to a translated string. Rendering
+    // `error.message` directly would put the backend's English text inside a
+    // French page — the one place where an otherwise fully translated UI leaks.
+    const heading = error.isNotFound ? m.product.notFound : m.errors.generic;
+    const detail = error.isNotFound
+      ? m.product.notFoundHint
+      : error.isUnreachable
+        ? m.errors.backendUnreachable
+        : error.code === 'service_unavailable'
+          ? m.errors.upstreamSlow
+          : error.code === 'upstream_error'
+            ? m.errors.upstreamUnavailable
+            : m.errors.generic;
+
+    return (
+      <div className="mx-auto max-w-md py-12 text-center">
+        <h1 className="text-lg font-semibold">{heading}</h1>
+        <p className="mt-2 text-sm text-muted">{detail}</p>
+        <BackLink locale={locale} label={m.product.backToSearch} className="mt-6 inline-block" />
+      </div>
+    );
   }
 
   const { product } = data;

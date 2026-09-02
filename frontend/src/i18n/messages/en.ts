@@ -100,6 +100,8 @@ const en = {
     endsOn: 'Access ends on {date}',
   },
   errors: {
+    upstreamSlow: 'Open Food Facts is not responding right now. Please try again in a moment.',
+    upstreamUnavailable: 'Open Food Facts could not be reached. Please try again in a moment.',
     generic: 'Something went wrong.',
     backendUnreachable: 'The API is not responding. Is the backend running on port 4000?',
     retry: 'Try again',

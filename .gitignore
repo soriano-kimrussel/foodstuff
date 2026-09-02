@@ -12,6 +12,8 @@ build/
 
 *.log
 npm-debug.log*
+*.tsbuildinfo
+next-env.d.ts
 coverage/
 .nyc_output/
 

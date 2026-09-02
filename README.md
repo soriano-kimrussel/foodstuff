@@ -210,6 +210,8 @@ backend/
   tests/
     unit/                    pure, no I/O
     integration/             Express + Prisma + MySQL, OFF stubbed
+  tsconfig.json              editor + typecheck (includes tests)
+  tsconfig.build.json        production emit (src only -> dist/server.js)
 frontend/
   src/
     middleware.ts            locale detection and redirect
@@ -423,6 +425,14 @@ the honest limit of a crowd-sourced dataset.
 - Whenever a fallback is used, the response carries which language was actually used, and
   the UI labels it: *"Shown in French; no Dutch version has been contributed."* The app
   never silently pretends a French ingredient list is Dutch.
+
+### Errors are translated by code, not by message
+
+The API returns `{ error: { code, message } }` and the frontend renders a string chosen from
+its own catalogue based on `code` — it never prints `error.message`. That message is written
+in English on the server, and rendering it would put English text inside an otherwise fully
+translated French page. It was doing exactly that until an Open Food Facts timeout made it
+visible.
 
 Stripe Checkout is opened in the selected language too, and its success and cancel URLs
 return the user to the locale they left from.

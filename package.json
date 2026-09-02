@@ -1,0 +1,19 @@
+{
+  "name": "foodfacts-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Full-stack Open Food Facts product explorer with i18n and Stripe-gated nutrition data",
+  "scripts": {
+    "install:all": "npm --prefix backend install && npm --prefix frontend install",
+    "db:init": "scripts/db.sh init",
+    "db:start": "scripts/db.sh start",
+    "db:stop": "scripts/db.sh stop",
+    "setup": "npm run install:all && npm --prefix backend run prisma:generate && npm --prefix backend run prisma:deploy && npm --prefix backend run seed",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build": "npm --prefix backend run build && npm --prefix frontend run build",
+    "typecheck": "npm --prefix backend run typecheck && npm --prefix frontend run typecheck",
+    "test": "npm --prefix backend test"
+  },
+  "engines": { "node": ">=20.11" }
+}

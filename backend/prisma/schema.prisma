@@ -1,0 +1,95 @@
+// Prisma schema for the Open Food Facts product explorer.
+//
+// The app has exactly one demo user (see prisma/seed.ts), but the schema is
+// modelled as if there were many: every row that belongs to a person hangs off
+// User. That keeps the "add real auth later" path open without a migration.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    String @id @default(cuid())
+  email String @unique
+  name  String?
+
+  /// Stripe Customer id. Created lazily on the first checkout attempt so a
+  /// freshly seeded database needs no Stripe round-trip.
+  stripeCustomerId String? @unique
+
+  subscription Subscription?
+  searches     Search[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+/// Mirror of the Stripe Subscription object, kept in sync by the webhook
+/// handler. The backend never asks Stripe for entitlement on the request path;
+/// it reads this table, so product requests stay fast and work offline.
+model Subscription {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  stripeSubscriptionId String             @unique
+  stripePriceId        String?
+  status               SubscriptionStatus
+  currentPeriodEnd     DateTime?
+  cancelAtPeriodEnd    Boolean            @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@map("subscriptions")
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  TRIALING
+  PAST_DUE
+  CANCELED
+  INCOMPLETE
+  INCOMPLETE_EXPIRED
+  UNPAID
+  PAUSED
+}
+
+/// One row per search the user runs. Powers the "recent searches" list.
+model Search {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  /// Raw term as typed, trimmed. Stored so the UI can replay it verbatim.
+  term String @db.VarChar(191)
+  /// Interface language active when the search ran ("en" | "nl" | "de" | "fr").
+  language    String @db.VarChar(8)
+  resultCount Int    @default(0)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([userId, term])
+  @@map("searches")
+}
+
+/// Stripe delivers webhooks at least once, so the same event id can arrive
+/// twice. Inserting the id first makes replay a no-op: the unique constraint
+/// rejects the duplicate before any subscription row is touched.
+model ProcessedWebhookEvent {
+  id          String   @id
+  type        String   @db.VarChar(191)
+  processedAt DateTime @default(now())
+
+  @@index([processedAt])
+  @@map("processed_webhook_events")
+}

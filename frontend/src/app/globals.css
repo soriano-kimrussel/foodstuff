@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Colour tokens as raw "R G B" triples so Tailwind's <alpha-value> syntax works
+ * (bg-surface/50 and friends). Light values live on :root; the dark block only
+ * redefines the tokens, so no component has to know which theme is active.
+ */
+:root {
+  --surface: 250 250 249;
+  --raised: 255 255 255;
+  --ink: 24 24 27;
+  --muted: 113 113 122;
+  --line: 228 228 231;
+  --brand: 21 128 61;
+  --brand-ink: 255 255 255;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface: 12 12 14;
+    --raised: 24 24 27;
+    --ink: 244 244 245;
+    --muted: 161 161 170;
+    --line: 39 39 42;
+    --brand: 34 197 94;
+    --brand-ink: 5 46 22;
+  }
+}
+
+body {
+  background-color: rgb(var(--surface));
+  color: rgb(var(--ink));
+}
+
+/* Visible focus for keyboard users on every interactive element. */
+:where(a, button, input, select, [tabindex]):focus-visible {
+  outline: 2px solid rgb(var(--brand));
+  outline-offset: 2px;
+  border-radius: 3px;
+}

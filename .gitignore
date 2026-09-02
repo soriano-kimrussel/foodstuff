@@ -1,0 +1,26 @@
+node_modules/
+dist/
+.next/
+out/
+build/
+
+.env
+.env.local
+.env.test
+.env.*.local
+!.env.example
+
+*.log
+npm-debug.log*
+coverage/
+.nyc_output/
+
+.DS_Store
+Thumbs.db
+
+.idea/
+.vscode/
+!.vscode/extensions.json
+
+# Local MariaDB data directory used by scripts/db.sh
+.devdb/
